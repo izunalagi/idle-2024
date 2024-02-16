@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AjaxController;
 use App\Http\Controllers\Admin\ExportExcelController;
@@ -43,6 +43,9 @@ Auth::routes();
 // Route::get('/register', function(){
 //     return redirect('/');
 // });
+
+Route::get('/registrasi', 'Auth\RegisterController@index')->name('auth.register');
+Route::post('/create', 'Auth\RegisterController@create')->name('create');
 
 Route::get('/post/{post}', 'Admin\PostController@show')->name('post.show');
 

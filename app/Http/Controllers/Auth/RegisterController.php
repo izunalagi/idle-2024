@@ -1,12 +1,15 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
-
+use App\Ormawa;
+use Illuminate\Http\Request;
 use App\User;
 use App\Http\Controllers\Controller;
+use App\Ormawa as AppOrmawa;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use PhpParser\Node\Stmt\TryCatch;
 
 class RegisterController extends Controller
 {
@@ -54,19 +57,30 @@ class RegisterController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
-
+    public function index()
+    {
+        $ormawas = Ormawa::all();
+        return view('auth.register', compact('ormawas'));
+    }
     /**
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
      * @return \App\User
      */
-    protected function create(array $data)
+    public function create(Request $request)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        try {
+            User::create([
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'id_ormawa' => $request['id_ormawa'],
+            'password' => Hash::make($request['password']),
+            ]);
+
+            return redirect('/');
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 }
